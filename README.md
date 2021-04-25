@@ -1,11 +1,10 @@
-# MICCAI-2021 PAC Bayesian Performance Guarantees for Deep(Stochastic) Networks in Medical Imaging
+# PAC-Bayes-In-Medical-Imaging
 
 
 ## Introduction
 
+The repo for the pre-print work **"PAC Bayesian Performance Guarantees for Deep(Stochastic) Networks in Medical Imaging."**
 
-
-This code repository is an implementation of "**PAC Bayesian Performance Guarantees for Deep(Stochastic) Networks in Medical Imaging.**"
 
 ## Preparation
 
