@@ -30,7 +30,7 @@ if __name__ == '__main__':
         type=str,
         choices=['segment', 'classify'],
         help='Task to evaluate.',
-        default='classify')
+        default='segment')
 
     parser.add_argument(
         '--model',
@@ -47,7 +47,7 @@ if __name__ == '__main__':
         type=int,
         help='Batch size. For partially decoupled training, ' \
         'prior sees this many samples. Posterior sees double',
-        default=64)
+        default=8)
 
     parser.add_argument(
         '--epochs',
@@ -55,20 +55,20 @@ if __name__ == '__main__':
         help='Number of epochs to train. When using prefix, ' \
         'prior and posterior get this number of epochs total ' \
         '(unless specified otherwise by coupling parameters).',
-        default=150)
+        default=120)
 
     parser.add_argument(
         '--lr_step',
         type=int,
         help='Decrease the learning rate by factor of 10 ' \
         'after this many steps.',
-        default=125)
+        default=30)
 
     parser.add_argument(
         '--init_lr',
         type=float,
         help='Starting value for the learning rate.',
-        default=1e-3)
+        default=1e-2)
 
     parser.add_argument(
         '--weight_decay',
@@ -80,7 +80,7 @@ if __name__ == '__main__':
         '--momentum',
         type=float,
         help='Momentum for SGD',
-        default=.9)
+        default=.95)
 
     ################################################################
     # PAC BAYES PARAMS
@@ -99,7 +99,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--prior_dist',
         type=str,
-        choices=['gaussian', 'laplace'],
+        choices=['gaussian'],
         help='Distribution used for prior (and posterior).',
         default='gaussian')
 
@@ -120,7 +120,7 @@ if __name__ == '__main__':
         type=str,
         choices=['mean', 'sample', 'ensemble'],
         help='Estimator to use for inference for prob. models.',
-        default='mean')
+        default='sample')
 
     parser.add_argument(
         '--ensemble_samples',
@@ -174,8 +174,7 @@ if __name__ == '__main__':
         help='When using prefix or coupling, specifies when to ' \
         'stop training prior on prefix data (stops after epoch). ' \
         'If higher than --epochs, that value is used instead.',
-        # large default; i.e., don't stop training
-        default=1e4)
+        default=30)
 
     ################################################################
     # UTILS
@@ -276,6 +275,10 @@ if __name__ == '__main__':
     LOADER_ARGS = {"batch_size" : args.batch_size,
         "num_workers" : args.num_workers,
         "shuffle" : True}
+    TEST_LOADER_ARGS = {"batch_size": args.batch_size,
+        "num_workers": args.num_workers,
+        "shuffle": False
+    }
 
     trainloader = torch.utils.data.DataLoader(train, drop_last=True,
         **LOADER_ARGS)
@@ -286,10 +289,10 @@ if __name__ == '__main__':
         prefixtrainer = ClassicTrainer(Loss())
 
     boundloader = torch.utils.data.DataLoader(bound,
-        **LOADER_ARGS)
+        **TEST_LOADER_ARGS)
 
     testloader = torch.utils.data.DataLoader(test,
-        **LOADER_ARGS)
+        **TEST_LOADER_ARGS)
 
     if args.model == 'unet':
         Model = UNet
@@ -373,7 +376,7 @@ if __name__ == '__main__':
     else:
         metric_tester = PACBayes(estimator=args.estimator,
             ensemble_samples=args.ensemble_samples,wandb=wandb, **TESTER_ARGS)
-        bound_tester = PACBayesBound(args.mc_samples, args.delta,
+        bound_tester = PACBayesBound(args.mc_samples, args.delta, seed=args.random_seed,
             bound='mauer', wandb=wandb, **TESTER_ARGS)
         COMPUTE_ARGS = (model,)
         BOUND_NAME = 'PAC Bayes (Mauer)'

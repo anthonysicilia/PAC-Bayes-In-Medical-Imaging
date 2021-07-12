@@ -28,40 +28,10 @@ Available at: https://arxiv.org/abs/2104.05600
 
 ## Training
 
+To reproduce all results run the following scripts:
+- `sh scripts/run-lw.sh`
+- `sh scripts/run-rn.sh`
+- `sh scripts/run-un.sh`
 
-
-To reproduce the results showed in the fig a, b, c, and d, please run the following scripts.
-
-### Fig a
-
-- `sh scripts/fig_a/LW.sh`
-- `sh scripts/fig_a/LW-PBB.sh`
-- `sh scripts/fig_a/U-Net.sh`
-- `sh scripts/fig_a/U-Net-PBB.sh`
-
-### Fig b
-
-- `sh scripts/fig_b/sigma_prior_0.001.sh`
-- `sh scripts/fig_b/sigma_prior_0.005.sh`
-- `sh scripts/fig_b/sigma_prior_0.01.sh`
-- `sh scripts/fig_b/sigma_prior_0.02.sh`
-- `sh scripts/fig_b/sigma_prior_0.03.sh`
-- `sh scripts/fig_b/sigma_prior_0.04.sh`
-- `sh scripts/fig_b/sigma_prior_0.05.sh`
-
-### Fig c
-
-- `sh scripts/fig_c/sigma_prior_0.001.sh`
-- `sh scripts/fig_c/sigma_prior_0.005.sh`
-- `sh scripts/fig_c/sigma_prior_0.01.sh`
-- `sh scripts/fig_c/sigma_prior_0.02.sh`
-- `sh scripts/fig_c/sigma_prior_0.03.sh`
-- `sh scripts/fig_c/sigma_prior_0.04.sh`
-- `sh scripts/fig_c/sigma_prior_0.05.sh`
-- `sh scripts/fig_c/sigma_prior_0.1.sh`
-- `sh scripts/fig_c/sigma_prior_0.2.sh`
-
-### Fig d
-
-- `sh scripts/fig_d/LW.sh`
-- `sh scripts/fig_d/U-Net.sh`
+To run individual experiments, please check the comments which identify each 
+subcall with the correct experiment.

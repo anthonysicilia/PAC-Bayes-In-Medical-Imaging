@@ -2,7 +2,7 @@ import torch
 from ..bounds.functional import mauer_bound, \
     pac_bayes_hoeffding_bound, hoeffding_bound, mauer_bound_ortiz_impl
 from .utils import compute_kl
-from ..utils.utils import compute_dsc, compute_01
+from ..utils.utils import compute_dsc, compute_01, set_random_seed
 
 class Classic:
 
@@ -86,7 +86,7 @@ class PACBayes:
 class PACBayesBound:
 
     def __init__(self, mc_samples, delta, bound='mauer', name='01', 
-        metric=compute_01, invert=False, wandb=None):
+        seed=None, metric=compute_01, invert=False, wandb=None):
         """
         parameter notes:
         mc_samples is the number of hypothesis samples to use
@@ -101,6 +101,7 @@ class PACBayesBound:
         self.delta = delta
         self.bound = None
         self.kl_div = None
+        self.seed = seed
         self.wandb = wandb
         self.set_new_bound_fn(bound)
     
@@ -116,6 +117,13 @@ class PACBayesBound:
     
     def __call__(self, model, x, y):
         metric = 0.
+        if self.seed is not None:
+            # for consistent model samples. sets seed 
+            # universally, but should not effect outside
+            # data loaders b/c pytorch selects seed for 
+            # data sequencing at start of iteration. To be
+            # safe, we set shuffle to False when testing
+            set_random_seed(seed=self.seed)
         for _ in range(self.n):
             yhat = model(x, sample=True)
             metric += self.metric_fn(yhat, y, average=False)

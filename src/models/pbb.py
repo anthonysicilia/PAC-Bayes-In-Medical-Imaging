@@ -90,8 +90,8 @@ class Gaussian(nn.Module):
 
     def __init__(self, mu, rho, device='cuda', fixed=False):
         super().__init__()
-        self.mu = nn.Parameter(mu, requires_grad=not fixed).to(device)
-        self.rho = nn.Parameter(rho, requires_grad=not fixed).to(device)
+        self.mu = nn.Parameter(mu.to(device), requires_grad=not fixed)
+        self.rho = nn.Parameter(rho.to(device), requires_grad=not fixed)
         self.device = device
 
     @property
@@ -99,8 +99,13 @@ class Gaussian(nn.Module):
         # Computation of standard deviation:
         # We use rho instead of sigma so that sigma is always positive during
         # the optimisation. Specifically, we use sigma = log(exp(rho)+1)
-        m = nn.Softplus()
-        return m(self.rho)
+
+        # Correction per issue: https://github.com/mperezortiz/PBB/issues/1
+        # OLD CODE:
+        # m = nn.Softplus()
+        # return m(self.rho)
+        # NEW CODE:
+        return torch.log(1 + torch.exp(self.rho))
 
     def sample(self):
         # Return a sample from the Gaussian distribution
@@ -141,8 +146,8 @@ class Laplace(nn.Module):
 
     def __init__(self, mu, rho, device='cuda', fixed=False):
         super().__init__()
-        self.mu = nn.Parameter(mu, requires_grad=not fixed).to(device)
-        self.rho = nn.Parameter(rho, requires_grad=not fixed).to(device)
+        self.mu = nn.Parameter(mu.to(device), requires_grad=not fixed)
+        self.rho = nn.Parameter(rho.to(device), requires_grad=not fixed)
         self.device = device
 
     @property
