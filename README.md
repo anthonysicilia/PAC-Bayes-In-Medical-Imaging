@@ -3,8 +3,8 @@
 
 ## Introduction
 
-The repo for the pre-print work **"PAC Bayesian Performance Guarantees for Deep(Stochastic) Networks in Medical Imaging."**
-Available at: https://arxiv.org/abs/2104.05600
+The repo for the work **"PAC Bayesian Performance Guarantees for Deep(Stochastic) Networks in Medical Imaging."**
+Accepted to MICCAI 2021. Available at: https://arxiv.org/abs/2104.05600
 
 
 ## Preparation
